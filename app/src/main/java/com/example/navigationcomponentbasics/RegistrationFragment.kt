@@ -10,26 +10,30 @@ import com.example.navigationcomponentbasics.databinding.FragmentRegistrationBin
 
 class RegistrationFragment : Fragment() {
 
-    private var binding: FragmentRegistrationBinding? = null
-    private val _Binding get() = binding!!
+    private var mBinding: FragmentRegistrationBinding? = null
+    private val binding get() = mBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentRegistrationBinding.inflate(inflater, container, false)
+        mBinding = FragmentRegistrationBinding.inflate(inflater, container, false)
 
-        _Binding.txtLogin.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             findNavController().navigate(R.id.action_registrationFragment_to_loginFragment)
         }
 
-        return _Binding.root
+        binding.btnSignUp.setOnClickListener {
+            findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
+        }
+
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        mBinding = null
     }
 
 }
