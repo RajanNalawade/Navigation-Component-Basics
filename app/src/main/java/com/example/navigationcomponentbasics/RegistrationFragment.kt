@@ -80,14 +80,15 @@ class RegistrationFragment : Fragment() {
         return authViewModel.validateUserCredentials(
             userRequest.userName,
             userRequest.email,
-            userRequest.password
+            userRequest.password,
+            false
         )
     }
 
     private fun getUserRequest(): UserRequest {
         val userName = binding.txtUsername.text.toString()
         val email = binding.txtEmail.text.toString()
-        val password = binding.txtPassword.toString()
+        val password = binding.txtPassword.text.toString()
         return UserRequest(email, password, userName)
     }
 

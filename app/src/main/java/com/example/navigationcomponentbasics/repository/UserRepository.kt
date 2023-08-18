@@ -23,10 +23,11 @@ class UserRepository @Inject constructor(private val userApi: UserApi) {
     }
 
     suspend fun loginUser(userRequest: UserRequest) {
+        mUserResponseLiveData.postValue(NetworkResult.Loading())
         val response = userApi.signIn(userRequest)
         handleResponse(response)
     }
-    
+
     private inline fun handleResponse(response: Response<UserResponse>) {
         Log.d(Constants.TAG, "response: ${response.body().toString()}")
         if (response.isSuccessful && response.body() != null) {

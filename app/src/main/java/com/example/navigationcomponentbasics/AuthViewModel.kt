@@ -33,10 +33,11 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
     fun validateUserCredentials(
         userName: String,
         email: String,
-        password: String
+        password: String,
+        isLogin: Boolean
     ): Pair<Boolean, String> {
         var result = Pair(true, "")
-        if (TextUtils.isEmpty(userName)) {
+        if (!isLogin && TextUtils.isEmpty(userName)) {
             result = Pair(false, "Please provide User Name")
         } else if (TextUtils.isEmpty(email)) {
             result = Pair(false, "Please provide User Email Address")
@@ -44,8 +45,8 @@ class AuthViewModel @Inject constructor(private val userRepository: UserReposito
             result = Pair(false, "Please provide Password")
         } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             result = Pair(false, "Please provide valid email address")
-        } else if (password.length !in 9..5) {
-            result = Pair(false, "Please provide password length between 5 to 9")
+        } else if (password.length != 6) {
+            result = Pair(false, "Password length should be 6")
         }
         return result
     }
