@@ -1,10 +1,10 @@
 package com.example.navigationcomponentbasics
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.navigationcomponentbasics.api.NotesApi
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -20,7 +20,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        log.d(Constatnts.Tag, "Fetch and Pull demo")
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 }
