@@ -11,7 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationcomponentbasics.databinding.FragmentRegistrationBinding
 import com.example.navigationcomponentbasics.models.UserRequest
 import com.example.navigationcomponentbasics.utils.NetworkResult
+import com.example.navigationcomponentbasics.utils.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RegistrationFragment : Fragment() {
@@ -21,12 +23,19 @@ class RegistrationFragment : Fragment() {
 
     private val authViewModel by viewModels<AuthViewModel>()
 
+    @Inject
+    lateinit var tokenManager: TokenManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         mBinding = FragmentRegistrationBinding.inflate(inflater, container, false)
+
+        if (tokenManager.getToken() != null) {
+            findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
+        }
 
         return binding.root
     }
@@ -61,6 +70,7 @@ class RegistrationFragment : Fragment() {
             when (it) {
                 is NetworkResult.Success -> {
                     //save token
+                    tokenManager.saveToken(it.data!!.token)
                     findNavController().navigate(R.id.action_registrationFragment_to_homeFragment)
                 }
 

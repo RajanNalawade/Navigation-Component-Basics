@@ -11,24 +11,19 @@ import androidx.navigation.fragment.findNavController
 import com.example.navigationcomponentbasics.databinding.FragmentLoginBinding
 import com.example.navigationcomponentbasics.models.UserRequest
 import com.example.navigationcomponentbasics.utils.NetworkResult
+import com.example.navigationcomponentbasics.utils.TokenManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
     private var mBinding: FragmentLoginBinding? = null
     private val binding get() = mBinding!!
 
     private val authViewModel by viewModels<AuthViewModel>()
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,6 +63,7 @@ class LoginFragment : Fragment() {
             when (it) {
                 is NetworkResult.Success -> {
                     //save token
+                    tokenManager.saveToken(it.data!!.token)
                     findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
                 }
 
