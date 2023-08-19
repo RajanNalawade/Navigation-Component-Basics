@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.navigationcomponentbasics.databinding.NoteItemBinding
 import com.example.navigationcomponentbasics.models.NoteResponse
 
-class NoteAdapter() : ListAdapter<NoteResponse, NoteAdapter.NoteViewHolder>(ComparatorDiffUtil()) {
+class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) : ListAdapter<NoteResponse, NoteAdapter.NoteViewHolder>(ComparatorDiffUtil()) {
 
     inner class NoteViewHolder(private val binding: NoteItemBinding) : ViewHolder(binding.root) {
         fun bind(noteResponse: NoteResponse) {
             binding.txtTitle.text = noteResponse.title
             binding.txtDescription.text = noteResponse.description
+            binding.root.setOnClickListener {
+                onNoteClicked(noteResponse)
+            }
         }
     }
 
