@@ -1,59 +1,101 @@
 package com.example.navigationcomponentbasics
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import com.example.navigationcomponentbasics.databinding.FragmentLoginBinding
+import com.example.navigationcomponentbasics.models.UserRequest
+import com.example.navigationcomponentbasics.utils.NetworkResult
+import com.example.navigationcomponentbasics.utils.TokenManager
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var mBinding: FragmentLoginBinding? = null
+    private val binding get() = mBinding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private val authViewModel by viewModels<AuthViewModel>()
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        mBinding = FragmentLoginBinding.inflate(inflater, container, false)
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LoginFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LoginFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.btnLogin.setOnClickListener {
+            val validateResult = validateUserInput()
+            if (validateResult.first) {
+                authViewModel.loginUser(getUserRequest())
+            } else {
+                binding.txtError.text = validateResult.second
+            }
+        }
+
+        binding.btnSignUp.setOnClickListener {
+            //removes top from the backStack
+            findNavController().popBackStack()
+        }
+
+        bindObservers()
+
+    }
+
+    private fun bindObservers() {
+        authViewModel.userResponseLiveData.observe(viewLifecycleOwner, Observer {
+            binding.progressBar.visibility = View.GONE
+            when (it) {
+                is NetworkResult.Success -> {
+                    //save token
+                    tokenManager.saveToken(it.data!!.token)
+                    findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
+                }
+
+                is NetworkResult.Error -> {
+                    binding.txtError.text = it.message
+                }
+
+                is NetworkResult.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
                 }
             }
+        })
+    }
+
+    private fun validateUserInput(): Pair<Boolean, String> {
+        val userRequest = getUserRequest()
+        return authViewModel.validateUserCredentials(
+            userRequest.userName,
+            userRequest.email,
+            userRequest.password,
+            true
+        )
+    }
+
+    private inline fun getUserRequest(): UserRequest {
+        val email = binding.txtEmail.text.toString()
+        val password = binding.txtPassword.text.toString()
+        return UserRequest(email, password, "")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mBinding = null
     }
 }
