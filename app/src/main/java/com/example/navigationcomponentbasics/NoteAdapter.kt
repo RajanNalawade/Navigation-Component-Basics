@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.navigationcomponentbasics.databinding.NoteItemBinding
 import com.example.navigationcomponentbasics.models.NoteResponse
 
-class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) : ListAdapter<NoteResponse, NoteAdapter.NoteViewHolder>(ComparatorDiffUtil()) {
+class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) :
+    ListAdapter<NoteResponse, NoteAdapter.NoteViewHolder>(ComparatorDiffUtil()) {
 
     inner class NoteViewHolder(private val binding: NoteItemBinding) : ViewHolder(binding.root) {
+
         fun bind(noteResponse: NoteResponse) {
             binding.txtTitle.text = noteResponse.title
             binding.txtDescription.text = noteResponse.description
@@ -29,6 +31,10 @@ class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) : ListAdapt
             return oldItem == newItem
         }
 
+        override fun getChangePayload(oldItem: NoteResponse, newItem: NoteResponse): Any? {
+            return oldItem._id != newItem._id
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -40,6 +46,20 @@ class NoteAdapter(private val onNoteClicked: (NoteResponse) -> Unit) : ListAdapt
         val note = getItem(position)
         note?.let {
             holder.bind(it)
+        }
+    }
+
+    override fun onBindViewHolder(
+        holder: NoteViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+        } else {
+            if (payloads[0] == true) {
+                holder.bind(getItem(position))
+            }
         }
     }
 }

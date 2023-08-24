@@ -73,6 +73,10 @@ dependencies {
     var coroutines_version = "1.7.1"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+
+    //security
+    var androidx_security = "1.0.0"
+    implementation "androidx.security:security-crypto:$androidx_security"
 }
 
 // Allow references to generated code

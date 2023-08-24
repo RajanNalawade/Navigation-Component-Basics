@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "643159623223",
+    "project_id": "navigationcomponentbasics",
+    "storage_bucket": "navigationcomponentbasics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:643159623223:android:b2ec104605a897ff94e1b2",
+        "android_client_info": {
+          "package_name": "com.example.navigationcomponentbasics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "643159623223-7c4eoaqt4kpsu1bdna4gqfiqfsaulluo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzSZ9KodDuptynHh0ogLsYCTCifmQYTK8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "643159623223-7c4eoaqt4kpsu1bdna4gqfiqfsaulluo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
